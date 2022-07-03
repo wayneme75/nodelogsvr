@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Azure Blob Storage Log Upload</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css">
+    <style>
+      h1 {
+        font-size: 40px;
+      }
+      
+      h2 {
+        font-size: 30px;
+      }
+
+      h3 {
+        font-size: 15px;
+      }
+      
+      p {
+        font-size: 10px;
+      }
+
+      footer {
+        font-size: 10px;
+        color: darkgrey;
+        text-align: center;
+
+      }
+      </style>
+  </head>
+  <body>
+  <section class="section">
+    <img src="/images/ncdoc.jpeg" style="float:right; margin:0px 0px 15px 15px; cursor:pointer; cursor:hand; border:0" width="100" height="100" alt="NCDOC Emblem" />
+    <div class="container">
+      <h1 class="title">Log File Upload</h1>
+      <b>Below is an auto-generated SAS key, this is for display purposes only.</b><br>
+        <h3>This key will only be valid for 2hrs.</h3>
+      <pre id="name">...</pre>
+      <br>
+      &nbsp;
+      <label for="image">Choose your log file:</label>
+      <input type="file" id="image" name="image" accept=".zip, .tar, .rar, .7zip">
+    </div>
+  </section>
+  <script src="../dist/main.js" type="text/javascript"></script>
+    <script>
+        (async function () {
+            var response = await fetch("/api/credentials");
+            const credentials = await response.json();
+            const {url, sasKey} = credentials;
+            console.log(credentials);
+            document.querySelector('#name').textContent = `SAS Key: ${sasKey}` + "\n" + `URL: ${url}`;
+            function uploadFile() {
+                const file = document.getElementById('image').files[0];
+                blobUpload(file, url, 'incident', sasKey);
+            };
+            const fileInput = document.getElementById('image');
+            fileInput.addEventListener("change", uploadFile);
+        }())
+    </script>
+    <footer>Terms and Conditions & Privacy Statement</right></footer>
+  </body>
+</html>
